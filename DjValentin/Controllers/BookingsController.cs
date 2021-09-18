@@ -11,14 +11,12 @@ using DjValentin.Models;
 namespace DjValentin.Controllers
 {
     public class BookingsController : Controller
-    {
-        private readonly AppDbContext _context;
+    {        
         private readonly BookingService _bookingService;
 
         public BookingsController(AppDbContext context)
-        {
-            _context = context;
-            _bookingService = new BookingService();
+        {            
+            _bookingService = new BookingService(context);
         }
 
         // GET: Bookings
@@ -87,7 +85,7 @@ namespace DjValentin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookingDate,VehicleSize,Flexibility, Person")] Booking booking)
+        public IActionResult Edit(int id, [Bind("Id,BookingDate,VehicleSize,Flexibility, Person")] Booking booking)
         {
             if (id != booking.Id)
             {
@@ -98,8 +96,7 @@ namespace DjValentin.Controllers
             {
                 try
                 {
-                    _context.Update(booking);
-                    await _context.SaveChangesAsync();
+                    _bookingService.Update(booking);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,8 +122,7 @@ namespace DjValentin.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Bookings
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var booking = await _bookingService.GetById(id);
             if (booking == null)
             {
                 return NotFound();
@@ -140,15 +136,20 @@ namespace DjValentin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
+            var booking = await _bookingService.GetById(id);
+            if (booking == null)
+            {
+                NotFound();
+            }
+
+            await _bookingService.Delete(booking);           
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookingExists(int id)
         {
-            return _context.Bookings.Any(e => e.Id == id);
+            var bookings = _bookingService.GetBookings();
+            return bookings.Any(e => e.Id == id);
         }
     }
 }

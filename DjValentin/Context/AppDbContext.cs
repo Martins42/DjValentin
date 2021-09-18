@@ -1,9 +1,10 @@
 ﻿using DjValentin.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DjValentin.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext
     {        
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
@@ -13,8 +14,16 @@ namespace DjValentin.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Booking>()
+                .HasKey(p => p.Id);
+            modelBuilder.Entity<Person>()
+                .HasKey(p => p.Id);
             modelBuilder.Entity<Booking>()
                 .HasOne(p => p.Person);
+
         }
+
     }
 }
