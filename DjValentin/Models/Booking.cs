@@ -17,6 +17,7 @@ namespace DjValentin.Models
         [Required]
         [Display(Name = "Flexibility")]
         public Flexibility Flexibility { get; set; }
+        public bool IsApproved { get; set; }
         public ICollection<BookingPerson> BookingPerson { get; set; }
 
     }

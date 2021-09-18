@@ -22,7 +22,8 @@ namespace DjValentin.Controllers
         // GET: Bookings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Bookings.ToListAsync());
+            var entidade = _context.Bookings.Include(x => x.BookingPerson).ThenInclude(y => y.Person).ToList();
+            return View(entidade);
         }
 
         // GET: Bookings/Details/5
