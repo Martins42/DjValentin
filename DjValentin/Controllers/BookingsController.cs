@@ -20,9 +20,9 @@ namespace DjValentin.Controllers
         }
 
         // GET: Bookings
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var entidade = _context.Bookings.Include(x => x.BookingPerson).ThenInclude(y => y.Person).ToList();
+            var entidade = _context.Bookings.Include(x => x.Person);
             return View(entidade);
         }
 
@@ -55,7 +55,7 @@ namespace DjValentin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BookingDate,VehicleSize,Flexibility")] Booking booking)
+        public async Task<IActionResult> Create([Bind("Id,BookingDate,VehicleSize,Flexibility,Person")] Booking booking)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace DjValentin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookingDate,VehicleSize,Flexibility")] Booking booking)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BookingDate,VehicleSize,Flexibility, Person")] Booking booking)
         {
             if (id != booking.Id)
             {

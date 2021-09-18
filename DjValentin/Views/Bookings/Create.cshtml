@@ -1,4 +1,5 @@
-﻿@model DjValentin.Models.Booking
+﻿@using DjValentin.Enums;
+@model DjValentin.Models.Booking
 
 @{
     ViewData["Title"] = "Create";
@@ -13,29 +14,40 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Person.Name" class="control-label"></label>
+                <input asp-for="Person.Name" class="form-control" />
+                <span asp-validation-for="Person.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BookingDate" class="control-label"></label>
                 <input asp-for="BookingDate" class="form-control" />
                 <span asp-validation-for="BookingDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Flexibility" class="control-label"></label>
+                <select asp-for="Flexibility" class="form-control" asp-items="Html.GetEnumSelectList<Flexibility>()"></select>
+                <span asp-validation-for="Flexibility" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="VehicleSize" class="control-label"></label>
-                <select asp-for="VehicleSize" class="form-control"></select>
+                <select asp-for="VehicleSize" class="form-control" asp-items="Html.GetEnumSelectList<VehicleSize>()"></select>
                 <span asp-validation-for="VehicleSize" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Flexibility" class="control-label"></label>
-                <select asp-for="Flexibility" class="form-control"></select>
-                <span asp-validation-for="Flexibility" class="text-danger"></span>
+                <label asp-for="Person.ContactNumber" class="control-label"></label>
+                <input asp-for="Person.ContactNumber" class="form-control" />
+                <span asp-validation-for="Person.ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Person.Email" class="control-label"></label>
+                <input asp-for="Person.Email" class="form-control" />
+                <span asp-validation-for="Person.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

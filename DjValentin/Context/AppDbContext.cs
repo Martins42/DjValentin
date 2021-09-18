@@ -9,21 +9,12 @@ namespace DjValentin.Context
         { }
 
         public DbSet<Person> Persons { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<BookingPerson> BookingPersons { get; set; }
+        public DbSet<Booking> Bookings { get; set; }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BookingPerson>()
-                .HasKey(bc => new { bc.BookingId, bc.PersonId });
-            modelBuilder.Entity<BookingPerson>()
-                .HasOne(bc => bc.Booking)
-                .WithMany(b => b.BookingPerson)
-                .HasForeignKey(bc => bc.BookingId);
-            modelBuilder.Entity<BookingPerson>()
-                .HasOne(bc => bc.Person)
-                .WithMany(c => c.BookingPerson)
-                .HasForeignKey(bc => bc.PersonId);
+            modelBuilder.Entity<Booking>()
+                .HasOne(p => p.Person);
         }
     }
 }
