@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DjValentin.Context;
 using DjValentin.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DjValentin.Controllers
 {
+    [Authorize]
     public class BookingsController : Controller
     {        
         private readonly BookingService _bookingService;
@@ -44,6 +46,7 @@ namespace DjValentin.Controllers
         }
 
         // GET: Bookings/Create
+        [AllowAnonymous]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +56,7 @@ namespace DjValentin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,BookingDate,VehicleSize,Flexibility,Person")] Booking booking)
         {

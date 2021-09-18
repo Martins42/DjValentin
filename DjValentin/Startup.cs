@@ -50,20 +50,22 @@ namespace DjValentin
                 app.UseHsts();
             }
 
-            app.UseAuthentication();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+
+
+            
         }
     }
 }
