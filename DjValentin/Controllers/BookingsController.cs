@@ -13,17 +13,18 @@ namespace DjValentin.Controllers
     public class BookingsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly BookingService _bookingService;
 
         public BookingsController(AppDbContext context)
         {
             _context = context;
+            _bookingService = new BookingService();
         }
 
         // GET: Bookings
         public IActionResult Index()
-        {
-            var entidade = _context.Bookings.Include(x => x.Person);
-            return View(entidade);
+        {             
+            return View(_bookingService.GetBookings());
         }
 
         // GET: Bookings/Details/5
@@ -34,8 +35,8 @@ namespace DjValentin.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Bookings
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var booking = await _bookingService.GetById(id);
+            
             if (booking == null)
             {
                 return NotFound();
@@ -55,12 +56,11 @@ namespace DjValentin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BookingDate,VehicleSize,Flexibility,Person")] Booking booking)
+        public IActionResult Create([Bind("Id,BookingDate,VehicleSize,Flexibility,Person")] Booking booking)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(booking);
-                await _context.SaveChangesAsync();
+                _bookingService.Create(booking);
                 return RedirectToAction(nameof(Index));
             }
             return View(booking);
@@ -74,7 +74,7 @@ namespace DjValentin.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _bookingService.GetById(id);
             if (booking == null)
             {
                 return NotFound();
