@@ -21,27 +21,27 @@ namespace DjValentin.Repository
             return _context.Bookings.Include(x => x.Person);
         }
 
-        public async Task CreateAsync(Booking booking)
+        public void Create(Booking booking)
         {
             _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public async Task<Booking> GetById(int? id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(m => m.Id == id);            
+            return await _context.Bookings.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task Update(Booking booking)
+        public void Update(Booking booking)
         {
             _context.Update(booking);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
         }
 
-        public async Task Delete(Booking booking)
-        {            
+        public void Delete(Booking booking)
+        {
             _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace DjValentin.Controllers
 {
     [Authorize]
     public class BookingsController : Controller
-    {        
+    {                
         private readonly BookingService _bookingService;
 
         public BookingsController(AppDbContext context)
