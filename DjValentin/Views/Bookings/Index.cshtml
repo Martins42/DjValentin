@@ -4,7 +4,7 @@
     ViewData["Title"] = "Bookings";
 }
 
-<h1>Index</h1>
+<h1>Bookings</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-success">Create New</a>
@@ -57,11 +57,23 @@
                     @Html.DisplayFor(modelItem => item.Person.Email)
                 </td>
                 <td>
-                    <a asp-action="Approve" onclick="teste" asp-route-id="@item.Id"><i class="fas fa-thumbs-up"></i></a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
+                    <a asp-action="Approve" class="btn" id="btnApprove" asp-route-id="@item.Id"><i class="fas fa-thumbs-up"></i></a> |
+                    <a asp-action="Edit" class="btn" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
+                    <a asp-action="Delete" class="btn" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>                    
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts
+{
+<script>
+    $('#btnApprove').off().click( function(e) {
+      $('#btnApprove').prop('disable', true);
+       e.preventDefault();
+
+    });
+
+</script>
+}

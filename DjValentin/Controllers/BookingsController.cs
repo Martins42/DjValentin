@@ -175,7 +175,6 @@ namespace DjValentin.Controllers
                     if (result.IsCompleted)
                     {
                         entity.EmailSended = true;
-                        _bookingService.Update(entity);
                     }                    
                 }                
             }
@@ -183,6 +182,10 @@ namespace DjValentin.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            finally
+            {
+                _bookingService.Update(entity);
+            }            
 
             return RedirectToAction(nameof(Index));
         }

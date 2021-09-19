@@ -8,7 +8,7 @@ namespace DjValentin.Models
     {
         public int Id { get; set; }
         [Required]
-        [Display(Name = "Booking Date")]
+        [Display(Name = "Booking Date")]        
         public DateTime BookingDate { get; set; }
         [Required]
         [Display(Name = "Vehicle Size")]
