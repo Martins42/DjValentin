@@ -29,19 +29,19 @@ namespace DjValentin.Repository
 
         public async Task<Booking> GetById(int? id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Bookings.Include(x => x.Person).FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public void Update(Booking booking)
         {
             _context.Update(booking);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void Delete(Booking booking)
         {
             _context.Bookings.Remove(booking);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

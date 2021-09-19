@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<DjValentin.Models.Booking>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bookings";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -36,31 +37,31 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Person.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookingDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Flexibility)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleSize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Person.ContactNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Person.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
-            </td>
-        </tr>
+            <tr class="@(item.IsApproved ? "table-success" : "")">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Flexibility)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleSize)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person.ContactNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person.Email)
+                </td>
+                <td>
+                    <a asp-action="Approve" onclick="teste" asp-route-id="@item.Id"><i class="fas fa-thumbs-up"></i></a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

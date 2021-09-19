@@ -1,29 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DjValentin.Context;
+using DjValentin.Models;
+using DjValentin.Services;
+using DjValentin.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DjValentin.Context;
-using DjValentin.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DjValentin.Controllers
 {
     [Authorize]
     public class BookingsController : Controller
-    {                
+    {
         private readonly BookingService _bookingService;
+        private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _config;
 
-        public BookingsController(AppDbContext context)
-        {            
+        public BookingsController(AppDbContext context, IEmailSender emailSender, IConfiguration config)
+        {
             _bookingService = new BookingService(context);
+            _emailSender = emailSender;
+            _config = config;
         }
 
         // GET: Bookings
         public IActionResult Index()
-        {             
+        {
             return View(_bookingService.GetBookings());
         }
 
@@ -36,7 +40,7 @@ namespace DjValentin.Controllers
             }
 
             var booking = await _bookingService.GetById(id);
-            
+
             if (booking == null)
             {
                 return NotFound();
@@ -138,15 +142,48 @@ namespace DjValentin.Controllers
         // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var booking = await _bookingService.GetById(id);
+            var booking = _bookingService.GetById(id);
             if (booking == null)
             {
                 NotFound();
             }
 
-            await _bookingService.Delete(booking);           
+            _bookingService.Delete(booking.Result);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Approve(int id)
+        {
+            var booking = _bookingService.GetById(id);
+            if (booking == null)
+            {
+                NotFound();
+            }
+
+            var entity = booking.Result;
+            entity.IsApproved = true;            
+
+            try
+            {
+                if (!entity.EmailSended)
+                {
+                    var subject = _config.GetValue<string>("EmailSettings:Subject");
+                    var message = _config.GetValue<string>("EmailSettings:Message");
+                    var result = _emailSender.SendEmailAsync(entity.Person.Email, subject, message);
+                    if (result.IsCompleted)
+                    {
+                        entity.EmailSended = true;
+                        _bookingService.Update(entity);
+                    }                    
+                }                
+            }
+            catch (System.Exception)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

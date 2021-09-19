@@ -19,5 +19,6 @@ namespace DjValentin.Models
         public bool IsApproved { get; set; }
         public virtual Person Person { get; set; }       
         public int PersonId { get; set; }
+        public bool EmailSended { get; set; }
     }
 }

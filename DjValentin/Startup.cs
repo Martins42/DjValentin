@@ -1,4 +1,6 @@
 using DjValentin.Context;
+using DjValentin.Services;
+using DjValentin.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +34,9 @@ namespace DjValentin
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                          .AddEntityFrameworkStores<AppDbContext>();
+            
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddTransient<IEmailSender, AuthMessageSender>();
 
             services.AddControllersWithViews();
         }
@@ -57,7 +62,7 @@ namespace DjValentin
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Bookings}/{action=Create}/{id?}");
             });
 
             app.UseHttpsRedirection();

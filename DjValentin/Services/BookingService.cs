@@ -1,7 +1,6 @@
 using DjValentin.Context;
 using DjValentin.Models;
 using DjValentin.Repository;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +18,17 @@ namespace DjValentin.Services
 
         public void Create(Booking booking)
         {
-            _bookingRepository.Create(booking);
+            var person = _personService.GetByEmail(booking.Person.Email);
+            if (person == null)
+            {
+                _bookingRepository.Create(booking);
+            }
+            else
+            {
+                booking.Person = person.Result;
+                _bookingRepository.Create(booking);
+            }
+                
         }
 
         public IQueryable<Booking> GetBookings()
@@ -41,5 +50,6 @@ namespace DjValentin.Services
         {
             _bookingRepository.Delete(booking);
         }
+        
     }
 }
