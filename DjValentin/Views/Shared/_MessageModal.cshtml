@@ -1,0 +1,21 @@
+﻿@model DjValentin.Models.MessageViewModel
+
+<style>    
+    .message-container {
+        display: flex;
+        align-items: baseline;
+    }
+
+    .icon {
+        margin-left: 5px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="message-container alert alert-@Model.Type">
+    <h5>@Model.Message</h5>
+    <button class="btn" onclick="return closeMessage();">
+        <i class="icon fas fa-times-circle"></i>
+    </button>
+
+</div>

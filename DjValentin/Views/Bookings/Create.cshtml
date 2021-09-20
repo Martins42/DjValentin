@@ -1,11 +1,22 @@
 ﻿@using DjValentin.Enums;
 @using Microsoft.AspNetCore.Identity
+@using Newtonsoft.Json
 @model DjValentin.Models.Booking
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Create";
+    var message = new MessageViewModel();
+    if(TempData.ContainsKey("Message"))
+    {
+        message = JsonConvert.DeserializeObject<MessageViewModel>(TempData["Message"].ToString());
+    }    
+}
+
+@if (message.Message != null)
+{    
+    <partial name= "_MessageModal" model= "message" />
 }
 
 <h1>Create</h1>

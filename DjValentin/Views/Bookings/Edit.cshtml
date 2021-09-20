@@ -3,6 +3,16 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var message = new MessageViewModel();
+    if(TempData.ContainsKey("Message"))
+    {
+        message = JsonConvert.DeserializeObject<MessageViewModel>(TempData["Message"].ToString());
+    }    
+}
+
+@if (message.Message != null)
+{    
+    <partial name= "_MessageModal" model= "message" />
 }
 
 <h1>Edit</h1>

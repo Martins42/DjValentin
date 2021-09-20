@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,12 +19,14 @@ namespace DjValentin.Controllers
         private readonly BookingService _bookingService;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
+        private readonly MessageViewModel message; 
 
         public BookingsController(AppDbContext context, IEmailSender emailSender, IConfiguration config)
         {
             _bookingService = new BookingService(context);
             _emailSender = emailSender;
             _config = config;
+            message = new MessageViewModel();
         }
 
         // GET: Bookings
@@ -66,7 +70,21 @@ namespace DjValentin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (booking.BookingDate < DateTime.Now)
+                {                    
+                    this.message.Message = "The Booking date can't be smaller than today";
+                    this.message.Type = "danger";
+
+                    TempData["Message"] = JsonConvert.SerializeObject(this.message);
+                    return View(booking);
+                }
+
                 _bookingService.Create(booking);
+                
+                this.message.Message = "Booking created!";
+                this.message.Type = "success";                
+                TempData["Message"] = JsonConvert.SerializeObject(this.message);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(booking);
@@ -104,7 +122,20 @@ namespace DjValentin.Controllers
             {
                 try
                 {
+                    if (booking.BookingDate < DateTime.Now)
+                    {
+                        this.message.Message = "The Booking date can't be smaller than today";
+                        this.message.Type = "danger";
+
+                        TempData["Message"] = JsonConvert.SerializeObject(this.message);
+                        return View(booking);
+                    }
+
                     _bookingService.Update(booking);
+                    this.message.Message = "Booking updated!";
+                    this.message.Type = "success";                    
+
+                    TempData["Message"] = JsonConvert.SerializeObject(this.message);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,6 +145,14 @@ namespace DjValentin.Controllers
                     }
                     else
                     {
+                        var message = new MessageViewModel()
+                        {
+                            Message = "Update fail!",
+                            Type = "danger"
+                        };
+
+                        TempData["Message"] = JsonConvert.SerializeObject(message);
+
                         throw;
                     }
                 }
@@ -151,6 +190,12 @@ namespace DjValentin.Controllers
             }
 
             _bookingService.Delete(booking.Result);
+
+
+            this.message.Message = "Booking deleted!";
+            this.message.Type = "success";            
+            TempData["Message"] = JsonConvert.SerializeObject(this.message);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -163,15 +208,19 @@ namespace DjValentin.Controllers
             }
 
             var entity = booking.Result;
-            entity.IsApproved = true;            
+            entity.IsApproved = true;      
+
+            this.message.Message = "Booking Approved!";
+            this.message.Type = "success";
+            TempData["Message"] = JsonConvert.SerializeObject(this.message);
 
             try
             {
                 if (!entity.EmailSended)
                 {
                     var subject = _config.GetValue<string>("EmailSettings:Subject");
-                    var message = _config.GetValue<string>("EmailSettings:Message");
-                    var result = _emailSender.SendEmailAsync(entity.Person.Email, subject, message);
+                    var mailMessage = _config.GetValue<string>("EmailSettings:Message");
+                    var result = _emailSender.SendEmailAsync(entity.Person.Email, subject, mailMessage);
                     if (result.IsCompleted)
                     {
                         entity.EmailSended = true;

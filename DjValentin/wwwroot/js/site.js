@@ -1,9 +1,7 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function closeMessage() {    
+    $('.message-container').css("display", "none");
+}
 
-// Write your JavaScript code.
-
-function teste() {
-    debugger;
-    console.log('oi');
+function approveBooking(e) {
+    e.preventDefault();    
 }

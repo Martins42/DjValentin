@@ -18,7 +18,7 @@ namespace DjValentin.Repository
 
         public IQueryable<Booking> GetBookings()
         {
-            return _context.Bookings.Include(x => x.Person);
+            return _context.Bookings.Include(x => x.Person).OrderBy(x => x.BookingDate);
         }
 
         public void Create(Booking booking)
