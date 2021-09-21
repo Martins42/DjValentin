@@ -1,6 +1,6 @@
 ﻿@model DjValentin.Models.MessageViewModel
 
-<style>    
+<style>
     .message-container {
         display: flex;
         align-items: baseline;
@@ -8,13 +8,18 @@
 
     .icon {
         margin-left: 5px;
-        cursor: pointer;
+        cursor: pointer;        
+    }
+
+    .btnClose {
+        margin-left: auto;
+        margin-right: 0;
     }
 </style>
 
 <div class="message-container alert alert-@Model.Type">
     <h5>@Model.Message</h5>
-    <button class="btn" onclick="return closeMessage();">
+    <button class="btn btnClose" onclick="return closeMessage();">
         <i class="icon fas fa-times-circle"></i>
     </button>
 
