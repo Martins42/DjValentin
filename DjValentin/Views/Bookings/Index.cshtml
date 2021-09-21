@@ -3,16 +3,16 @@
 
 @{
     ViewData["Title"] = "Bookings";
-    var message = new MessageViewModel();
+    var messageViewModel = new MessageViewModel();
     if(TempData.ContainsKey("Message"))
     {
-        message = JsonConvert.DeserializeObject<MessageViewModel>(TempData["Message"].ToString());
+        messageViewModel = JsonConvert.DeserializeObject<MessageViewModel>(TempData["Message"].ToString());
     }    
 }
 
-@if (message != null)
+@if (messageViewModel.Message != null)
 {    
-    <partial name= "_MessageModal" model= "message" />
+    <partial name= "_MessageModal" model= "messageViewModel" />
 }
 
 
